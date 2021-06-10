@@ -7,6 +7,11 @@
   align-items: center;
 }
 
+.todoContainer {
+  border: 1px solid #333;
+  padding: 15px 20px;
+}
+
 .overflowItems {
   overflow-y: scroll;
   max-height: 150px;
@@ -72,6 +77,9 @@
   font-size: 1.1rem;
   font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
     Bitstream Vera Sans Mono, Courier New, monospace;
+  max-height: 500px;
+  overflow-y: auto;
+  margin: 30px 0;
 }
 
 .grid {

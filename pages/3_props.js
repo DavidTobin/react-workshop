@@ -72,7 +72,7 @@ export default function Props() {
         <ItemsAdder />
 
 
-        <p><a href="/basic_fixed">Next</a></p>
+        <p><a href="/4_effects">Next</a></p>
       </main>
 
       <Footer />
