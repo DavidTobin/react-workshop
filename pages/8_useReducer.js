@@ -1,7 +1,8 @@
-import React, { useReducer, useCallback } from 'react';
+import React, { useReducer, useCallback, useEffect, useRef } from 'react';
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Footer from '../components/footer';
+import hljs from 'highlight.js';
 
 function TodoAdder({ onChangeTodo, onAddTodo, addTodoText }) {
   return (
@@ -70,6 +71,12 @@ function TodoApp({ reducer = todoReducer }) {
 }
 
 export default function Reducers() {
+  const codeRef = useRef(null);
+
+  useEffect(() => {
+    hljs.highlightElement(codeRef.current);
+  }, [codeRef]);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -95,73 +102,75 @@ export default function Reducers() {
         </p>
 
         <pre className={styles.code}>
-          {`
-            function TodoAdder({ onChangeTodo, onAddTodo, addTodoText }) {
-              return (
-                <>
-                  <input type="text" onChange={onChangeTodo} value={addTodoText} />
-                  <button onClick={onAddTodo}>Add</button>
-                </>
-              );
-            }
-
-            function TodoList({ todos }) {
-              return (
-                <>
-                  {todos.map(todo => (
-                    <div className={styles.todo} key={todo.name}>
-                      <input type="checkbox" checked={todo.done} readOnly />
-                      {todo.name}
-                    </div>
-                  ))}
-                </>
-              );
-            }
-
-            const initialState = {
-              todos: [],
-              addTodoText: ''
-            };
-
-            const actions = {
-              ADD_TODO: 'ADD_TODO',
-              CHANGE_TODO: 'CHANGE_TODO'
-            }
-
-            function todoReducer(state, action) {
-              switch (action.type) {
-                case actions.ADD_TODO:
-                  return {
-                    ...state,
-                    todos: [{ name: state.addTodoText, done: false }].concat(state.todos),
-                    addTodoText: ''
-                  };
-
-                case actions.CHANGE_TODO:
-                  return {
-                    ...state,
-                    addTodoText: action.value
-                  };
-                default:
-                  return state;
+          <code ref={codeRef}>
+            {`
+              function TodoAdder({ onChangeTodo, onAddTodo, addTodoText }) {
+                return (
+                  <>
+                    <input type="text" onChange={onChangeTodo} value={addTodoText} />
+                    <button onClick={onAddTodo}>Add</button>
+                  </>
+                );
               }
-            }
 
-            function TodoApp({ reducer = todoReducer }) {
-              const [state, dispatch] = useReducer(reducer, initialState);
-              const onAddTodo = useCallback(() => dispatch({ type: actions.ADD_TODO }), []);
-              const onChangeTodo = useCallback(e => dispatch({ type: actions.CHANGE_TODO, value: e.target.value }), []);
+              function TodoList({ todos }) {
+                return (
+                  <>
+                    {todos.map(todo => (
+                      <div className={styles.todo} key={todo.name}>
+                        <input type="checkbox" checked={todo.done} readOnly />
+                        {todo.name}
+                      </div>
+                    ))}
+                  </>
+                );
+              }
 
-              return (
-                <div className={styles.todoContainer}>
-                  <h1>My Todo List</h1>
+              const initialState = {
+                todos: [],
+                addTodoText: ''
+              };
 
-                  <TodoAdder addTodoText={state.addTodoText} onAddTodo={onAddTodo} onChangeTodo={onChangeTodo} />
-                  <TodoList todos={state.todos} />
-                </div>
-              )
-            }
-          `}
+              const actions = {
+                ADD_TODO: 'ADD_TODO',
+                CHANGE_TODO: 'CHANGE_TODO'
+              }
+
+              function todoReducer(state, action) {
+                switch (action.type) {
+                  case actions.ADD_TODO:
+                    return {
+                      ...state,
+                      todos: [{ name: state.addTodoText, done: false }].concat(state.todos),
+                      addTodoText: ''
+                    };
+
+                  case actions.CHANGE_TODO:
+                    return {
+                      ...state,
+                      addTodoText: action.value
+                    };
+                  default:
+                    return state;
+                }
+              }
+
+              function TodoApp({ reducer = todoReducer }) {
+                const [state, dispatch] = useReducer(reducer, initialState);
+                const onAddTodo = useCallback(() => dispatch({ type: actions.ADD_TODO }), []);
+                const onChangeTodo = useCallback(e => dispatch({ type: actions.CHANGE_TODO, value: e.target.value }), []);
+
+                return (
+                  <div className={styles.todoContainer}>
+                    <h1>My Todo List</h1>
+
+                    <TodoAdder addTodoText={state.addTodoText} onAddTodo={onAddTodo} onChangeTodo={onChangeTodo} />
+                    <TodoList todos={state.todos} />
+                  </div>
+                )
+              }
+            `}
+          </code>
         </pre>
 
         <TodoApp />

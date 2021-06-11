@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Footer from '../components/footer';
+import hljs from 'highlight.js';
 
 function ItemsAdder({ isDisabled, initialItems }) {
   const [items, setItems] = useState(initialItems || []);
@@ -22,6 +23,12 @@ function ItemsAdder({ isDisabled, initialItems }) {
 }
 
 export default function Props() {
+  const codeRef = useRef(null);
+
+  useEffect(() => {
+    hljs.highlightElement(codeRef.current);
+  }, [codeRef]);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -41,30 +48,32 @@ export default function Props() {
         </p>
 
         <pre className={styles.code}>
-          {`
-            function ItemsAdder({ isDisabled, initialItems }) {
-              const [items, setItems] = useState(initialItems || []);
+          <code ref={codeRef}>
+            {`
+              function ItemsAdder({ isDisabled, initialItems }) {
+                const [items, setItems] = useState(initialItems || []);
 
-              const addItem = () => setItems([\`Item \${Math.random()} added\`].concat(items));
+                const addItem = () => setItems([\`Item \${Math.random()} added\`].concat(items));
 
-              return (
-                <div>
-                  <button disabled={isDisabled} onClick={addItem}>Add item</button>
+                return (
+                  <div>
+                    <button disabled={isDisabled} onClick={addItem}>Add item</button>
 
-                  <div className={styles.overflowItems}>
-                    {items.map(item => (
-                      <p key={item}>{item}</p>
-                    ))}
+                    <div className={styles.overflowItems}>
+                      {items.map(item => (
+                        <p key={item}>{item}</p>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )
-            }
+                )
+              }
 
-        <ItemsAdder isDisabled />
-        <ItemsAdder initialItems={["Initial item 1", "Initial item 2"]} />
-        <ItemsAdder />
+          <ItemsAdder isDisabled />
+          <ItemsAdder initialItems={["Initial item 1", "Initial item 2"]} />
+          <ItemsAdder />
 
-          `}
+            `}
+          </code>
         </pre>
 
         <ItemsAdder isDisabled />

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Footer from '../components/footer';
+import hljs from 'highlight.js';
 
 function TodoAdder({ onChangeTodo, onAddTodo, addTodoText }) {
   return (
@@ -41,6 +42,12 @@ function TodoApp() {
 }
 
 export default function Reducers() {
+  const codeRef = useRef(null);
+
+  useEffect(() => {
+    hljs.highlightElement(codeRef.current);
+  }, [codeRef]);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -68,44 +75,46 @@ export default function Reducers() {
         </p>
 
         <pre className={styles.code}>
-          {`
-            function TodoAdder({ onChangeTodo, onAddTodo, addTodoText }) {
-              return (
-                <>
-                  <input type="text" onChange={onChangeTodo} value={addTodoText} />
-                  <button onClick={onAddTodo}>Add</button>
-                </>
-              );
-            }
+          <code ref={codeRef}>
+            {`
+              function TodoAdder({ onChangeTodo, onAddTodo, addTodoText }) {
+                return (
+                  <>
+                    <input type="text" onChange={onChangeTodo} value={addTodoText} />
+                    <button onClick={onAddTodo}>Add</button>
+                  </>
+                );
+              }
 
-            function TodoList({ todos }) {
-              return (
-                <>
-                  {todos.map(todo => (
-                    <div className={styles.todo} key={todo.name}>
-                      <input type="checkbox" checked={todo.done} readOnly />
-                      {todo.name}
-                    </div>
-                  ))}
-                </>
-              );
-            }
+              function TodoList({ todos }) {
+                return (
+                  <>
+                    {todos.map(todo => (
+                      <div className={styles.todo} key={todo.name}>
+                        <input type="checkbox" checked={todo.done} readOnly />
+                        {todo.name}
+                      </div>
+                    ))}
+                  </>
+                );
+              }
 
-            function TodoApp() {
-              const todos = [{ name: 'React workshop', done: false }, { name: 'On-call', done: true }];
-              const onAddTodo = () => {};
-              const onChangeTodo = () => {};
+              function TodoApp() {
+                const todos = [{ name: 'React workshop', done: false }, { name: 'On-call', done: true }];
+                const onAddTodo = () => {};
+                const onChangeTodo = () => {};
 
-              return (
-                <div className={styles.todoContainer}>
-                  <h1>My Todo List</h1>
+                return (
+                  <div className={styles.todoContainer}>
+                    <h1>My Todo List</h1>
 
-                  <TodoAdder onAddTodo={onAddTodo} onChangeTodo={onChangeTodo} />
-                  <TodoList todos={todos} />
-                </div>
-              )
-            }
-          `}
+                    <TodoAdder onAddTodo={onAddTodo} onChangeTodo={onChangeTodo} />
+                    <TodoList todos={todos} />
+                  </div>
+                )
+              }
+            `}
+          </code>
         </pre>
 
         <TodoApp />

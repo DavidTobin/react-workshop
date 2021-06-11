@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Footer from '../components/footer';
+import hljs from 'highlight.js';
 
 class ItemsAdder extends React.Component {
   constructor(props) {
@@ -35,6 +36,12 @@ class ItemsAdder extends React.Component {
 }
 
 export default function Basic() {
+  const codeRef = useRef(null);
+
+  useEffect(() => {
+    hljs.highlightElement(codeRef.current);
+  }, [codeRef]);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -55,6 +62,7 @@ export default function Basic() {
         </p>
 
         <pre className={styles.code}>
+          <code ref={codeRef}>
           {`
             class ItemsAdder extends React.Component {
               constructor(props) {
@@ -85,6 +93,7 @@ export default function Basic() {
               }
             }
           `}
+          </code>
         </pre>
 
         <ItemsAdder />

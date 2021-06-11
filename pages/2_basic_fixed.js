@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Footer from '../components/footer';
+import hljs from 'highlight.js';
 
 function ItemsAdder() {
   const [items, setItems] = useState([]);
@@ -22,6 +23,12 @@ function ItemsAdder() {
 }
 
 export default function BasicFixed() {
+  const codeRef = useRef(null);
+
+  useEffect(() => {
+    hljs.highlightElement(codeRef.current);
+  }, [codeRef]);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -47,25 +54,27 @@ export default function BasicFixed() {
         </p>
 
         <pre className={styles.code}>
-          {`
-            function ItemsAdder() {
-              const [items, setItems] = useState([]);
+          <code ref={codeRef}>
+            {`
+              function ItemsAdder() {
+                const [items, setItems] = useState([]);
 
-              const addItem = () => setItems([\`Item \${Math.random()} added\`].concat(items));
+                const addItem = () => setItems([\`Item \${Math.random()} added\`].concat(items));
 
-              return (
-                <div>
-                  <button onClick={addItem}>Add item</button>
+                return (
+                  <div>
+                    <button onClick={addItem}>Add item</button>
 
-                  <div className={styles.overflowItems}>
-                    {items.map(item => (
-                      <p key={item}>{item}</p>
-                    ))}
+                    <div className={styles.overflowItems}>
+                      {items.map(item => (
+                        <p key={item}>{item}</p>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )
-            }
-          `}
+                )
+              }
+            `}
+          </code>
         </pre>
 
         <ItemsAdder />

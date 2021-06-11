@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Footer from '../components/footer';
+import hljs from 'highlight.js';
 
 async function fetchTodos() {
   const res = await fetch('/api/todos');
@@ -55,6 +56,12 @@ function TodoApp() {
 }
 
 export default function Callbacks() {
+  const codeRef = useRef(null);
+
+  useEffect(() => {
+    hljs.highlightElement(codeRef.current);
+  }, [codeRef]);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -75,62 +82,64 @@ export default function Callbacks() {
         </p>
 
         <pre className={styles.code}>
-          {`
-            async function fetchTodos() {
-              const res = await fetch('/api/todos');
+          <code ref={codeRef}>
+            {`
+              async function fetchTodos() {
+                const res = await fetch('/api/todos');
 
-              if (res.ok) {
-                const json = await res.json();
+                if (res.ok) {
+                  const json = await res.json();
 
-                return json.todos;
-              } else {
-                return [];
+                  return json.todos;
+                } else {
+                  return [];
+                }
               }
-            }
 
-            function TodoApp() {
-              const [todos, setTodos] = useState([]);
+              function TodoApp() {
+                const [todos, setTodos] = useState([]);
 
-              // Network request side effect
-              useEffect(async () => {
-                const t = await fetchTodos();
+                // Network request side effect
+                useEffect(async () => {
+                  const t = await fetchTodos();
 
-                setTodos(t);
-              }, []);
+                  setTodos(t);
+                }, []);
 
-              // Page title update side effect
-              useEffect(() => {
-                document.title = \`\${todos.length} remaining todo items\`
-              }, [todos]);
+                // Page title update side effect
+                useEffect(() => {
+                  document.title = \`\${todos.length} remaining todo items\`
+                }, [todos]);
 
-              const onAddTodo = useCallback(() => {
-                setTodos([{
-                  name: addTodoText,
-                  done: false,
-                }].concat(todos))
-              }, [todos, addTodoText]);
+                const onAddTodo = useCallback(() => {
+                  setTodos([{
+                    name: addTodoText,
+                    done: false,
+                  }].concat(todos))
+                }, [todos, addTodoText]);
 
-              const onChangeTodo = useCallback(e => setAddTodoText(e.target.value), []);
+                const onChangeTodo = useCallback(e => setAddTodoText(e.target.value), []);
 
-              return (
-                <div className={styles.todoContainer}>
-                  <h1>My Todo List</h1>
+                return (
+                  <div className={styles.todoContainer}>
+                    <h1>My Todo List</h1>
 
-                  <input type="text" onChange={onChangeTodo} value={addTodoText} />
-                  <button onClick={onAddTodo}>Add</button>
+                    <input type="text" onChange={onChangeTodo} value={addTodoText} />
+                    <button onClick={onAddTodo}>Add</button>
 
-                  {todos.map(todo => (
-                    <div className={styles.todo} key={todo.name}>
-                      <input type="checkbox" checked={todo.done} readOnly />
-                      {todo.name}
-                    </div>
-                  ))}
-                </div>
-              )
-            }
+                    {todos.map(todo => (
+                      <div className={styles.todo} key={todo.name}>
+                        <input type="checkbox" checked={todo.done} readOnly />
+                        {todo.name}
+                      </div>
+                    ))}
+                  </div>
+                )
+              }
 
-            <TodoApp />
-          `}
+              <TodoApp />
+            `}
+          </code>
         </pre>
 
         <TodoApp />
