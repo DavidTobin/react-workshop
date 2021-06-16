@@ -16,6 +16,30 @@ async function fetchTodos() {
   }
 }
 
+function TodoAdder({ onChangeTodo, onAddTodo, addTodoText }) {
+  return (
+    <>
+      <input type="text" onChange={onChangeTodo} value={addTodoText} />
+      <button onClick={onAddTodo}>Add</button>
+    </>
+  );
+}
+
+function TodoList({ todos, onTodosChange }) {
+  onTodosChange();
+
+  return (
+    <>
+      {todos.map(todo => (
+        <div className={styles.todo} key={todo.name}>
+          <input type="checkbox" checked={todo.done} readOnly />
+          {todo.name}
+        </div>
+      ))}
+    </>
+  );
+}
+
 function TodoApp() {
   const [todos, setTodos] = useState([]);
   const [addTodoText, setAddTodoText] = useState('');
@@ -26,10 +50,6 @@ function TodoApp() {
     setTodos(t);
   }, []);
 
-  useEffect(() => {
-    document.title = `${todos.length} remaining todo items`
-  }, [todos]);
-
   const onAddTodo = () => {
     setTodos([{
       name: addTodoText,
@@ -38,19 +58,14 @@ function TodoApp() {
   };
 
   const onChangeTodo = e => setAddTodoText(e.target.value);
+  const onTodosChange = () => console.log('Todos change', todos);
 
   return (
     <div className={styles.todoContainer}>
       <h1>My Todo List</h1>
 
-      <input type="text" onChange={onChangeTodo} value={addTodoText} />
-      <button onClick={onAddTodo}>Add</button>
-      {todos.map(todo => (
-        <div className={styles.todo} key={todo.name}>
-          <input type="checkbox" checked={todo.done} readOnly />
-          {todo.name}
-        </div>
-      ))}
+      <TodoAdder onChangeTodo={onChangeTodo} onAddTodo={onAddTodo} addTodoText={addTodoText} />
+      <TodoList todos={todos} onTodosChange={onTodosChange} />
     </div>
   )
 }
@@ -76,8 +91,10 @@ export default function Callbacks() {
         </h1>
 
         <p>
-          Let's add the ability to add our own todos to the list. To do so we need to add two methods that are called, one when we click the "Add" button and one when we change text inside the
-          input. Can you spot the problem?
+          Let's now take a look at the <code>useCallback</code> hook. Take a look at the following example,
+          we've split our Todo app into multiple components. Our <code>{'<TodoAdder />'}</code> component
+          will handle adding new todo items to our state. Our <code>{'<TodoList />'}</code> component will then render these components. Can you spot
+          the problem with this code?
         </p>
 
         <pre className={styles.code}>
@@ -95,21 +112,39 @@ export default function Callbacks() {
                 }
               }
 
+              function TodoAdder({ onChangeTodo, onAddTodo, addTodoText }) {
+                return (
+                  <>
+                    <input type="text" onChange={onChangeTodo} value={addTodoText} />
+                    <button onClick={onAddTodo}>Add</button>
+                  </>
+                );
+              }
+
+              function TodoList({ todos, onTodosChange }) {
+                onTodosChange();
+
+                return (
+                  <>
+                    {todos.map(todo => (
+                      <div className={styles.todo} key={todo.name}>
+                        <input type="checkbox" checked={todo.done} readOnly />
+                        {todo.name}
+                      </div>
+                    ))}
+                  </>
+                );
+              }
+
               function TodoApp() {
                 const [todos, setTodos] = useState([]);
                 const [addTodoText, setAddTodoText] = useState('');
 
-                // Network request side effect
                 useEffect(async () => {
                   const t = await fetchTodos();
 
                   setTodos(t);
                 }, []);
-
-                // Page title update side effect
-                useEffect(() => {
-                  document.title = \`\${todos.length} remaining todo items\`
-                }, [todos]);
 
                 const onAddTodo = () => {
                   setTodos([{
@@ -118,21 +153,15 @@ export default function Callbacks() {
                   }].concat(todos))
                 };
 
-                const onChangeTodo = e => setAddTodoText(e.target.value)
+                const onChangeTodo = e => setAddTodoText(e.target.value);
+                const onTodosChange = () => console.log('Todos change', todos);
 
                 return (
                   <div className={styles.todoContainer}>
                     <h1>My Todo List</h1>
 
-                    <input type="text" onChange={onChangeTodo} value={addTodoText} />
-                    <button onClick={onAddTodo}>Add</button>
-
-                    {todos.map(todo => (
-                      <div className={styles.todo} key={todo.name}>
-                        <input type="checkbox" checked={todo.done} readOnly />
-                        {todo.name}
-                      </div>
-                    ))}
+                    <TodoAdder onChangeTodo={onChangeTodo} onAddTodo={onAddTodo} addTodoText={addTodoText} />
+                    <TodoList todos={todos} onTodosChange={onTodosChange} />
                   </div>
                 )
               }

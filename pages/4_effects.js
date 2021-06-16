@@ -26,7 +26,7 @@ function TodoApp() {
   }, []);
 
   useEffect(() => {
-    document.title = `${todos.length} remaining todo items`
+    document.title = `${todos.filter(t => t.done === false).length} remaining todo items`
   }, [todos]);
 
   return (
@@ -101,7 +101,7 @@ export default function Effects() {
 
                 // Page title update side effect
                 useEffect(() => {
-                  document.title = \`\${todos.length} remaining todo items\`
+                  document.title = \`\${todos.filter(t => t.done === false).length} remaining todo items\`
                 }, [todos]);
 
                 return (

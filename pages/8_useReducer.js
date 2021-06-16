@@ -1,19 +1,19 @@
-import React, { useReducer, useCallback, useEffect, useRef } from 'react';
+import React, { useReducer, useCallback, useEffect, useRef, memo } from 'react';
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Footer from '../components/footer';
 import hljs from 'highlight.js';
 
-function TodoAdder({ onChangeTodo, onAddTodo, addTodoText }) {
+const TodoAdder = memo(function TodoAdder({ onChangeTodo, onAddTodo, addTodoText }) {
   return (
     <>
       <input type="text" onChange={onChangeTodo} value={addTodoText} />
       <button onClick={onAddTodo}>Add</button>
     </>
   );
-}
+});
 
-function TodoList({ todos }) {
+const TodoList = memo(function TodoList({ todos }) {
   return (
     <>
       {todos.map(todo => (
@@ -24,7 +24,7 @@ function TodoList({ todos }) {
       ))}
     </>
   );
-}
+});
 
 const initialState = {
   todos: [],
@@ -104,16 +104,16 @@ export default function Reducers() {
         <pre className={styles.code}>
           <code ref={codeRef}>
             {`
-              function TodoAdder({ onChangeTodo, onAddTodo, addTodoText }) {
+              const TodoAdder = memo(function TodoAdder({ onChangeTodo, onAddTodo, addTodoText }) {
                 return (
                   <>
                     <input type="text" onChange={onChangeTodo} value={addTodoText} />
                     <button onClick={onAddTodo}>Add</button>
                   </>
                 );
-              }
+              });
 
-              function TodoList({ todos }) {
+              const TodoList = memo(function TodoList({ todos }) {
                 return (
                   <>
                     {todos.map(todo => (
@@ -124,7 +124,7 @@ export default function Reducers() {
                     ))}
                   </>
                 );
-              }
+              });
 
               const initialState = {
                 todos: [],
