@@ -21,6 +21,7 @@ class ItemsAdder extends React.Component {
 
   render() {
     const items = this.state.items;
+
     return (
       <div>
         <button onClick={this.addItem}>Add item</button>
@@ -81,6 +82,7 @@ export default function Basic() {
 
               render() {
                 const items = this.state.items;
+
                 return (
                   <div className={styles.overflowItems}>
                     <button onClick={this.addItem}>Add item</button>

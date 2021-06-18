@@ -44,7 +44,7 @@ export default function Props() {
 
         <p>
           Now that we view components as simple functions, we can think of props as arguments to these functions. One important property of props is that they are read-only. We should expect the exact
-          same behaviour from the <code>isDisabled</code> prop here. It should always set the button to disbled and the component logic should never change it's value.
+          same behaviour from the <code>isDisabled</code> prop here. It should always set the button to disabled and the component logic should never change it's value.
         </p>
 
         <pre className={styles.code}>
